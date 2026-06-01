@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>San Cristóbal Responsable</title>
+  <meta name="description" content="Normas ambientales y guía de lugares turísticos de San Cristóbal, Galápagos.">
+  <meta name="theme-color" content="#1e4a5a" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1e25" media="(prefers-color-scheme: dark)">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="San Cristóbal">
+
+  <link rel="manifest" href="./manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      color-scheme: light dark;
+      --page:       oklch(97% 0.018 180);
+      --paper:      oklch(99% 0.008 180);
+      --soft:       oklch(94% 0.026 178);
+      --ink:        oklch(24% 0.026 184);
+      --muted:      oklch(42% 0.03 184);
+      --line:       oklch(84% 0.025 180);
+      --sea:        oklch(59% 0.14 190);
+      --sea-dark:   oklch(38% 0.105 194);
+      --sand:       oklch(89% 0.075 88);
+      --green:      oklch(58% 0.14 145);
+      --green-bg:   oklch(96% 0.03 145);
+      --green-line: oklch(80% 0.08 145);
+      --alert-bg:   oklch(97% 0.03 55);
+      --alert-ink:  oklch(30% 0.07 45);
+      --alert-line: oklch(82% 0.08 58);
+      --shadow:     0 22px 60px oklch(35% 0.05 190 / 0.16);
+      --ease-out:   cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page:       oklch(11% 0.018 184);
+        --paper:      oklch(15% 0.020 184);
+        --soft:       oklch(20% 0.022 182);
+        --ink:        oklch(93% 0.015 185);
+        --muted:      oklch(65% 0.025 185);
+        --line:       oklch(26% 0.020 184);
+        --sea:        oklch(66% 0.13 190);
+        --sea-dark:   oklch(73% 0.10 190);
+        --sand:       oklch(24% 0.04 88);
+        --green:      oklch(66% 0.14 145);
+        --green-bg:   oklch(18% 0.03 145);
+        --green-line: oklch(36% 0.08 145);
+        --alert-bg:   oklch(17% 0.04 55);
+        --alert-ink:  oklch(86% 0.06 60);
+        --alert-line: oklch(34% 0.08 58);
+        --shadow:     0 22px 60px oklch(4% 0.02 190 / 0.55);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-body);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% -10%, oklch(82% 0.09 190 / 0.38), transparent 34rem),
+        radial-gradient(circle at 90% 0%, oklch(91% 0.08 92 / 0.45), transparent 31rem),
+        linear-gradient(180deg, var(--page), oklch(95% 0.02 170));
+      min-height: 100vh;
+      min-height: 100dvh;
+      overscroll-behavior: none;
+    }
+    @media (prefers-color-scheme: dark) {
+      body {
+        background:
+          radial-gradient(circle at 10% -10%, oklch(22% 0.06 190 / 0.4), transparent 34rem),
+          radial-gradient(circle at 90% 0%, oklch(16% 0.04 88 / 0.35), transparent 31rem),
+          var(--page);
+      }
+    }
+    [hidden] { display: none !important; }
+
+    /* i18n */
+    .i18n { display: none !important; }
+    body.lang-es .i18n.es { display: revert !important; }
+    body.lang-en .i18n.en { display: revert !important; }
+    body.lang-es .rule-list.i18n.es,
+    body.lang-en .rule-list.i18n.en { display: grid !important; }
+    body.lang-es .footer-links.i18n.es,
+    body.lang-en .footer-links.i18n.en { display: flex !important; }
+
+    /* ─── READING PROGRESS ─── */
+    #read-progress {
+      position: fixed; top: 0; left: 0; z-index: 200;
+      height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--sea), oklch(65% 0.14 145));
+      border-radius: 0 3px 3px 0;
+      transition: width 60ms linear; pointer-events: none;
+    }
+
+    /* ─── TOAST ─── */
+    #toast {
+      position: fixed; bottom: 72px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      padding: 10px 18px; border-radius: 999px;
+      background: oklch(20% 0.025 184); color: oklch(94% 0.01 185);
+      font-size: 0.86rem; font-weight: 600; white-space: nowrap;
+      pointer-events: none; opacity: 0; z-index: 300;
+      transition: opacity 180ms, transform 180ms var(--ease-out);
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ─── CONFETTI ─── */
+    #confetti-canvas {
+      position: fixed; inset: 0; z-index: 800;
+      pointer-events: none; opacity: 0; transition: opacity 300ms;
+    }
+    #confetti-canvas.show { opacity: 1; }
+
+    /* ─── OFFLINE BANNER ─── */
+    #offline-banner {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+      padding: 12px 20px;
+      background: oklch(22% 0.04 60); color: oklch(92% 0.02 65);
+      font-size: 0.86rem; font-weight: 600;
+      display: flex; align-items: center; gap: 10px; justify-content: center;
+      transform: translateY(100%); transition: transform 280ms var(--ease-out);
+    }
+    #offline-banner.show { transform: translateY(0); }
+
+    /* ─── INSTALL BANNER ─── */
+    #install-banner {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      padding: 14px 16px; padding-bottom: calc(14px + var(--safe-bottom));
+      background: var(--paper); border-top: 1px solid var(--line);
+      box-shadow: 0 -8px 28px oklch(30% 0.04 184 / 0.12);
+      display: flex; align-items: center; gap: 12px;
+      transform: translateY(100%); transition: transform 300ms var(--ease-out) 3s;
+    }
+    #install-banner.show { transform: translateY(0); }
+    .install-icon {
+      width: 40px; height: 40px; flex: 0 0 auto; border-radius: 14px;
+      background: linear-gradient(135deg, oklch(67% 0.14 190), oklch(53% 0.13 145));
+      display: grid; place-items: center;
+    }
+    .install-icon svg { width: 20px; height: 20px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .install-text { flex: 1; min-width: 0; }
+    .install-text strong { display: block; font-size: 0.9rem; }
+    .install-text span { color: var(--muted); font-size: 0.78rem; }
+    .install-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .install-actions button {
+      cursor: pointer; border: 0; border-radius: 999px;
+      padding: 9px 14px; font-family: inherit; font-size: 0.84rem; font-weight: 700;
+    }
+    .btn-install-ok { background: var(--sea-dark); color: oklch(98% 0.01 180); }
+    @media (prefers-color-scheme: dark) { .btn-install-ok { color: oklch(12% 0.015 184); } }
+    .btn-install-x { background: var(--soft); color: var(--muted); }
+
+    /* ─── LANGUAGE GATE ─── */
+    .language-gate {
+      min-height: 100vh; display: grid; place-items: center; padding: 22px;
+    }
+    .language-panel {
+      width: min(560px, 100%); overflow: hidden;
+      border: 1px solid oklch(87% 0.03 180); border-radius: 32px;
+      background: oklch(99% 0.01 180 / 0.9); box-shadow: var(--shadow);
+    }
+    @media (prefers-color-scheme: dark) {
+      .language-panel { background: oklch(16% 0.02 184 / 0.95); border-color: oklch(26% 0.022 184); }
+    }
+    .language-photo {
+      min-height: 230px;
+      background:
+        linear-gradient(180deg, oklch(15% 0.03 190 / 0.10), oklch(15% 0.03 190 / 0.62)),
+        url("https://commons.wikimedia.org/wiki/Special:FilePath/Galapagos2007--53--08-23-07.JPG?width=1280") center/cover,
+        linear-gradient(135deg, oklch(38% 0.105 194), oklch(58% 0.14 145));
+    }
+    .language-content { padding: 28px; }
+    .kicker {
+      display: inline-flex; width: fit-content;
+      padding: 7px 12px; border-radius: 999px;
+      background: oklch(91% 0.055 183); color: var(--sea-dark);
+      font-size: 0.78rem; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    @media (prefers-color-scheme: dark) { .kicker { background: oklch(22% 0.05 183); color: var(--sea); } }
+    .language-content h1 {
+      margin: 18px 0 10px; font-family: var(--font-display);
+      font-size: clamp(2.2rem, 8vw, 4.2rem);
+      line-height: 0.92; letter-spacing: -0.01em;
+    }
+    .language-content p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .language-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
+    .language-button {
+      cursor: pointer; user-select: none; border: 0;
+      border-radius: 18px; font-family: inherit;
+      display: flex; flex-direction: column; gap: 3px;
+      padding: 17px 20px;
+      background: var(--sea-dark); color: oklch(98% 0.01 180);
+      transition: transform 160ms var(--ease-out), background 180ms;
+    }
+    @media (prefers-color-scheme: dark) { .language-button { color: oklch(12% 0.015 184); } }
+    .language-button.secondary { background: var(--soft); color: var(--sea-dark); }
+    .language-button:active { transform: scale(0.97); }
+    .language-button .flag { font-size: 1.8rem; }
+    .language-button .lang-name { font-weight: 800; font-size: 1.05rem; }
+    .language-button .lang-hint { font-size: 0.78rem; opacity: 0.7; }
+
+    /* ─── READY STATE ─── */
+    .site { display: none; }
+    body.ready .site { display: block; animation: pageIn 220ms var(--ease-out) both; }
+    body.ready .language-gate { display: none; }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(14px) saturate(1.3);
+      background: oklch(98% 0.012 180 / 0.82);
+      border-bottom: 1px solid oklch(88% 0.025 180 / 0.75);
+    }
+    @media (prefers-color-scheme: dark) {
+      .topbar { background: oklch(13% 0.018 184 / 0.88); border-bottom-color: oklch(26% 0.020 180 / 0.75); }
+    }
+    .topbar-inner {
+      width: min(720px, calc(100% - 32px)); margin: auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px; padding: 12px 0;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px; min-width: 0;
+      color: var(--sea-dark); font-weight: 800; letter-spacing: -0.035em;
+      font-size: 0.95rem; text-decoration: none;
+    }
+    .brand-logo {
+      position: relative; width: 38px; height: 38px; flex: 0 0 auto;
+      border-radius: 15px;
+      background: linear-gradient(135deg, oklch(67% 0.14 190), oklch(53% 0.13 145));
+      box-shadow: 0 10px 20px oklch(50% 0.12 184 / 0.22); overflow: hidden;
+    }
+    .brand-logo::before, .brand-logo::after {
+      content: ""; position: absolute; left: 7px; right: 7px; height: 8px;
+      border: 2px solid oklch(98% 0.01 180 / 0.92); border-top: 0; border-radius: 50%;
+    }
+    .brand-logo::before { bottom: 10px; }
+    .brand-logo::after  { bottom: 4px; opacity: 0.72; }
+    .brand-logo .shell-mark {
+      position: absolute; top: 8px; left: 10px; width: 16px; height: 12px;
+      border-radius: 50% 55% 48% 48%; background: oklch(98% 0.01 180 / 0.95); transform: rotate(-10deg);
+    }
+    .brand-logo .shell-mark::after {
+      content: ""; position: absolute; right: -5px; top: 3px; width: 8px; height: 6px;
+      border-radius: 50%; background: oklch(98% 0.01 180 / 0.95);
+    }
+    .brand-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .btn-share {
+      display: grid; place-items: center; width: 36px; height: 36px;
+      border: 0; border-radius: 50%; background: var(--soft); color: var(--sea-dark);
+      cursor: pointer; transition: transform 160ms var(--ease-out), background 160ms;
+    }
+    .btn-share:hover  { background: oklch(90% 0.04 182); transform: translateY(-1px); }
+    .btn-share:active { transform: scale(0.94); }
+    .lang-switch {
+      display: flex; align-items: center; padding: 4px;
+      background: var(--soft); border-radius: 999px; gap: 4px;
+    }
+    .lang-switch button {
+      cursor: pointer; border: 0; border-radius: 999px; font-family: inherit;
+      padding: 8px 12px; background: transparent;
+      color: var(--muted); font-size: 0.86rem; font-weight: 800;
+      transition: transform 160ms var(--ease-out), background 180ms;
+    }
+    body.lang-es .lang-switch button[data-set-lang="es"],
+    body.lang-en .lang-switch button[data-set-lang="en"] {
+      background: var(--sea-dark); color: oklch(98% 0.01 180);
+    }
+    @media (prefers-color-scheme: dark) {
+      body.lang-es .lang-switch button[data-set-lang="es"],
+      body.lang-en .lang-switch button[data-set-lang="en"] { color: oklch(12% 0.015 184); }
+    }
+    .lang-switch button:active { transform: scale(0.94); }
+
+    /* ─── QUICK NAV ─── */
+    .quick-nav {
+      position: sticky; top: 62px; z-index: 90;
+      backdrop-filter: blur(12px);
+      background: oklch(98% 0.012 180 / 0.78);
+      border-bottom: 1px solid var(--line);
+    }
+    @media (prefers-color-scheme: dark) {
+      .quick-nav { background: oklch(13% 0.018 184 / 0.84); }
+    }
+    .quick-nav-inner {
+      width: min(720px, calc(100% - 32px)); margin: auto;
+      display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
+    }
+    .quick-nav-inner::-webkit-scrollbar { display: none; }
+    .quick-nav-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 13px 16px; border: 0; background: transparent;
+      font-family: inherit; font-size: 0.88rem; font-weight: 700;
+      color: var(--muted); cursor: pointer; white-space: nowrap;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      text-decoration: none;
+      transition: color 180ms, border-color 180ms;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .quick-nav-btn:hover { color: var(--sea); }
+    .quick-nav-btn svg {
+      width: 15px; height: 15px; fill: none; stroke: currentColor;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    }
+    .quick-nav-btn.active { color: var(--sea-dark); border-bottom-color: var(--sea-dark); }
+    @media (prefers-color-scheme: dark) {
+      .quick-nav-btn.active { color: var(--sea); border-bottom-color: var(--sea); }
+    }
+
+    /* ─── LAYOUT ─── */
+    .shell { width: min(720px, calc(100% - 32px)); margin: auto; }
+
+    /* ─── HERO ─── */
+    .hero { padding: 36px 0 28px; }
+    .hero h1 {
+      margin: 16px 0 14px; font-family: var(--font-display);
+      font-size: clamp(2.6rem, 12vw, 6rem);
+      line-height: 0.86; letter-spacing: -0.01em;
+    }
+    .hero-lead { max-width: 62ch; color: var(--muted); font-size: clamp(1rem, 2.8vw, 1.18rem); line-height: 1.6; }
+    .hero-note {
+      margin-top: 18px; max-width: 62ch; padding: 14px 16px; border-radius: 18px;
+      background: var(--sand); color: oklch(33% 0.045 85); font-weight: 700; font-size: 0.95rem; line-height: 1.5;
+    }
+    @media (prefers-color-scheme: dark) { .hero-note { color: oklch(78% 0.04 88); } }
+    .hero-media {
+      margin-top: 26px; overflow: hidden; border-radius: 32px;
+      background: var(--soft); box-shadow: var(--shadow);
+      aspect-ratio: 16/8; position: relative;
+    }
+    .hero-media img {
+      width: 100%; height: 100%; display: block; object-fit: cover;
+    }
+
+    /* ─── SECTION ANCHOR OFFSET ─── */
+    .section-anchor {
+      display: block; height: 80px; margin-top: -80px; visibility: hidden; pointer-events: none;
+    }
+
+    /* ─── SECTION ─── */
+    .section { padding: 32px 0; border-top: 1px solid var(--line); }
+    .section-head { display: grid; gap: 8px; margin-bottom: 22px; }
+    .section h2 {
+      margin: 0; font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 3.8rem); line-height: 0.95; letter-spacing: -0.01em;
+    }
+    .section-head p { margin: 0; max-width: 68ch; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+
+    /* ─── CHECKLIST PROGRESS ─── */
+    .checklist-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .checklist-bar { flex: 1; height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+    .checklist-bar-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--sea), oklch(64% 0.14 145));
+      border-radius: 999px; transition: width 420ms var(--ease-out);
+    }
+    .checklist-label { white-space: nowrap; font-size: 0.83rem; font-weight: 700; color: var(--muted); }
+    .checklist-label strong { color: var(--sea); }
+
+    /* ─── COMPLETE BADGE ─── */
+    .complete-badge {
+      display: none; align-items: center; gap: 12px;
+      padding: 16px; border-radius: 20px;
+      background: linear-gradient(135deg, var(--sea-dark), oklch(50% 0.13 145));
+      color: white; box-shadow: var(--shadow); margin-bottom: 16px;
+      animation: popIn 400ms var(--ease-spring) both;
+    }
+    .complete-badge.show { display: flex; }
+    .complete-badge-icon { font-size: 2rem; }
+    .complete-badge-text strong { display: block; font-size: 1.05rem; font-weight: 800; }
+    .complete-badge-text span { font-size: 0.84rem; opacity: 0.8; }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.85) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ─── RULES ─── */
+    .rule-list { grid-template-columns: 1fr; gap: 10px; }
+    .rule {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 13px; align-items: start;
+      padding: 17px; border: 1px solid var(--line); border-radius: 22px;
+      background: var(--paper); box-shadow: 0 6px 20px oklch(36% 0.04 180 / 0.05);
+      cursor: pointer; position: relative; overflow: hidden; user-select: none;
+      transition: transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out),
+                  border-color 220ms, background 220ms;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .rule:focus-visible { outline: 3px solid var(--sea); outline-offset: 2px; }
+    .rule.checked { border-color: var(--green-line); background: var(--green-bg); }
+    .rule:active { transform: scale(0.98); }
+    .rule-icon-wrap {
+      position: relative; width: 40px; height: 40px; border-radius: 14px;
+      background: oklch(88% 0.07 184); display: grid; place-items: center;
+      flex-shrink: 0; transition: background 240ms; overflow: hidden;
+    }
+    @media (prefers-color-scheme: dark) { .rule-icon-wrap { background: oklch(24% 0.06 184); } }
+    .rule.checked .rule-icon-wrap { background: oklch(76% 0.10 145); }
+    @media (prefers-color-scheme: dark) { .rule.checked .rule-icon-wrap { background: oklch(34% 0.10 145); } }
+    .rule-icon {
+      width: 20px; height: 20px; stroke: var(--sea-dark); stroke-width: 1.75;
+      fill: none; stroke-linecap: round; stroke-linejoin: round;
+      transition: opacity 200ms, transform 200ms var(--ease-out);
+    }
+    .rule.checked .rule-icon { opacity: 0; transform: scale(0.7); }
+    .rule-check-mark {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: scale(0.5);
+      transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
+    }
+    .rule.checked .rule-check-mark { opacity: 1; transform: scale(1); }
+    .rule-check-mark svg {
+      width: 22px; height: 22px; stroke: oklch(30% 0.10 145); stroke-width: 2.5;
+      fill: none; stroke-linecap: round; stroke-linejoin: round;
+    }
+    @media (prefers-color-scheme: dark) { .rule-check-mark svg { stroke: oklch(85% 0.10 145); } }
+    .rule strong { display: block; margin-bottom: 4px; font-size: 1rem; }
+    .rule p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
+    .rule-num { font-size: 0.75rem; font-weight: 800; color: var(--line); margin-top: 2px; }
+    .rule-tap-hint { font-size: 0.76rem; color: var(--muted); margin-top: 10px; text-align: center; opacity: 0.7; }
+
+    /* ─── PLACES ─── */
+    .places-list { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .place-card {
+      border-radius: 28px; overflow: hidden;
+      background: var(--paper); border: 1px solid var(--line);
+      box-shadow: 0 8px 32px oklch(35% 0.05 190 / 0.1);
+    }
+    .place-photo-wrap {
+      position: relative; aspect-ratio: 16/9; overflow: hidden;
+      background: var(--soft);
+    }
+    .place-photo-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 500ms var(--ease-out);
+    }
+    .place-card:hover .place-photo-wrap img { transform: scale(1.03); }
+    .place-badge {
+      position: absolute; bottom: 14px; left: 14px;
+      padding: 5px 12px; border-radius: 999px;
+      background: oklch(15% 0.03 190 / 0.75); backdrop-filter: blur(8px);
+      color: oklch(96% 0.01 180); font-size: 0.73rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .place-body { padding: 22px; }
+    .place-name {
+      font-family: var(--font-display); font-size: clamp(1.4rem, 5vw, 2rem);
+      line-height: 0.95; letter-spacing: -0.01em; margin-bottom: 10px;
+    }
+    .place-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px; }
+    .place-info-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .place-info-chip {
+      padding: 12px 14px; border-radius: 16px;
+      background: var(--soft); border: 1px solid var(--line);
+    }
+    .place-info-label {
+      font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--muted); margin-bottom: 4px;
+    }
+    .place-info-chip p {
+      margin: 0; font-size: 0.88rem; color: var(--ink); line-height: 1.45; font-weight: 600;
+    }
+    .place-info-row.three { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 480px) { .place-info-row.three { grid-template-columns: 1fr 1fr; } }
+
+    /* ─── EMERGENCY ─── */
+    .emergency-section {
+      padding: clamp(18px, 4vw, 28px); border: 1px solid var(--alert-line); border-radius: 32px;
+      background: var(--alert-bg);
+    }
+    .emergency-head {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+    }
+    .emergency-icon {
+      width: 52px; height: 52px; border-radius: 18px; flex-shrink: 0;
+      background: #dc2626; display: grid; place-items: center;
+    }
+    .emergency-icon svg { width: 24px; height: 24px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .emergency-title { font-family: var(--font-display); font-size: clamp(1.4rem, 5vw, 2rem); color: var(--alert-ink); }
+    .emergency-sub { color: var(--muted); font-size: 0.93rem; margin-top: 2px; }
+    .ecard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .ecard {
+      padding: 14px; border-radius: 18px;
+      background: var(--paper); border: 1px solid var(--alert-line);
+      display: flex; flex-direction: column; gap: 3px;
+      transition: transform 160ms var(--ease-spring), box-shadow 160ms;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ecard.clickable { cursor: pointer; }
+    .ecard.clickable:active { transform: scale(0.94); box-shadow: var(--shadow); }
+    .ecard-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+    .ecard-number {
+      font-family: var(--font-display); font-size: 2.1rem; line-height: 1.05;
+      color: #dc2626;
+    }
+    @media (prefers-color-scheme: dark) { .ecard-number { color: #fca5a5; } }
+    .ecard-note { font-size: 0.75rem; color: var(--muted); }
+    .ecard-call-hint {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.72rem; font-weight: 800; color: #dc2626; margin-top: 2px;
+    }
+    @media (prefers-color-scheme: dark) { .ecard-call-hint { color: #fca5a5; } }
+    .ecard-call-hint svg { width: 11px; height: 11px; fill: currentColor; }
+    .emergency-note {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 0.83rem; color: var(--muted); line-height: 1.5;
+      border-top: 1px solid var(--alert-line); padding-top: 14px; margin-top: 4px;
+    }
+    .emergency-note svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; fill: none; stroke: oklch(55% 0.12 55); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ─── FOOTER ─── */
+    .site-footer {
+      margin-top: 12px; padding: 28px 0 calc(32px + var(--safe-bottom));
+      border-top: 1px solid var(--line);
+    }
+    .site-footer p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 14px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .footer-links a {
+      display: inline-flex; align-items: center; padding: 8px 14px;
+      border-radius: 999px; background: var(--soft);
+      color: var(--sea-dark); text-decoration: none;
+      font-size: 0.84rem; font-weight: 700;
+      transition: transform 140ms var(--ease-spring);
+    }
+    .footer-links a:hover { transform: translateY(-1px); }
+    .footer-links a:active { transform: scale(0.94); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="read-progress"></div>
+  <canvas id="confetti-canvas"></canvas>
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- OFFLINE -->
+  <div id="offline-banner" role="alert">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+    <span class="i18n es">Sin conexión — la guía funciona igual ✓</span>
+    <span class="i18n en">Offline — the guide still works ✓</span>
+  </div>
+
+  <!-- INSTALL -->
+  <div id="install-banner">
+    <div class="install-icon">
+      <svg viewBox="0 0 24 24"><path d="M8 12l4 4 4-4M12 8v8"/><rect x="2" y="2" width="20" height="20" rx="6"/></svg>
+    </div>
+    <div class="install-text">
+      <strong class="i18n es">Guardar sin internet</strong>
+      <strong class="i18n en">Save for offline use</strong>
+      <span class="i18n es">Instala la app para usarla sin señal</span>
+      <span class="i18n en">Install to access without signal</span>
+    </div>
+    <div class="install-actions">
+      <button class="btn-install-ok" id="btn-pwa-install">
+        <span class="i18n es">Instalar</span><span class="i18n en">Install</span>
+      </button>
+      <button class="btn-install-x" id="btn-pwa-dismiss">✕</button>
+    </div>
+  </div>
+
+  <!-- ═══ LANGUAGE GATE ═══ -->
+  <section class="language-gate" aria-label="Seleccionar idioma">
+    <div class="language-panel">
+      <div class="language-photo"></div>
+      <div class="language-content">
+        <div class="kicker">🌊 Galápagos · San Cristóbal</div>
+        <h1>San Cristóbal<br>Responsable</h1>
+        <p>Guía ambiental · Environmental guide</p>
+        <div class="language-actions">
+          <button class="language-button" type="button" data-set-lang="es">
+            <span class="flag">🇪🇨</span>
+            <span class="lang-name">Español</span>
+            <span class="lang-hint">Entrar →</span>
+          </button>
+          <button class="language-button secondary" type="button" data-set-lang="en">
+            <span class="flag">🇬🇧</span>
+            <span class="lang-name">English</span>
+            <span class="lang-hint">Enter →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MAIN SITE ═══ -->
+  <div class="site">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#top">
+          <div class="brand-logo">
+            <div class="shell-mark"></div>
+          </div>
+          <span class="brand-name i18n es">San Cristóbal Responsable</span>
+          <span class="brand-name i18n en">Responsible San Cristóbal</span>
+        </a>
+        <div class="topbar-actions">
+          <button class="btn-share" id="btn-share" aria-label="Compartir / Share">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+          <div class="lang-switch">
+            <button type="button" data-set-lang="es">ES</button>
+            <button type="button" data-set-lang="en">EN</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- QUICK NAV (anchor links) -->
+    <nav class="quick-nav" aria-label="Secciones">
+      <div class="quick-nav-inner shell">
+        <a class="quick-nav-btn active" href="#normas" data-nav="normas">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span class="i18n es">Normas</span><span class="i18n en">Rules</span>
+        </a>
+        <a class="quick-nav-btn" href="#lugares" data-nav="lugares">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="i18n es">Lugares</span><span class="i18n en">Places</span>
+        </a>
+        <a class="quick-nav-btn" href="#emergencias" data-nav="emergencias">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="i18n es">Emergencias</span><span class="i18n en">Emergency</span>
+        </a>
+      </div>
+    </nav>
+
+    <main class="shell" id="top">
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="kicker i18n es">🌿 Cuidado ambiental · San Cristóbal</div>
+        <div class="kicker i18n en">🌿 Environmental care · San Cristóbal</div>
+        <h1 class="i18n es">Explora<br>San Cristóbal<br>con respeto.</h1>
+        <h1 class="i18n en">Explore<br>San Cristóbal<br>with respect.</h1>
+        <p class="hero-lead i18n es">Esta guía reúne normas simples para cuidar playas, senderos, muelles y malecones — y te presenta los lugares imperdibles de la isla.</p>
+        <p class="hero-lead i18n en">This guide brings together simple rules to care for beaches, trails, piers and boardwalks — and shows you the must-see spots on the island.</p>
+        <div class="hero-note i18n es">⚠️ Si una norma aparece aquí, aplícala en toda la isla. La fauna y los espacios naturales necesitan el mismo respeto en cada lugar.</div>
+        <div class="hero-note i18n en">⚠️ If a rule appears here, apply it across the island. Wildlife and natural spaces need the same respect everywhere.</div>
+        <div class="hero-media">
+          <img decoding="async"
+            src="https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280"
+            alt="Isla de San Cristóbal, Galápagos"
+            loading="eager"
+            onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280'">
+        </div>
+      </section>
+
+      <!-- ─────────── NORMAS ─────────── -->
+      <span class="section-anchor" id="normas"></span>
+      <section class="section" aria-labelledby="h-normas">
+        <div class="section-head">
+          <h2 id="h-normas" class="i18n es">Normas para cuidar San Cristóbal</h2>
+          <h2 id="h-normas-en" class="i18n en">Rules to care for San Cristóbal</h2>
+          <p class="i18n es">Toca cada norma para marcarla como leída.</p>
+          <p class="i18n en">Tap each rule to mark it as read.</p>
+        </div>
+
+        <div class="checklist-progress">
+          <div class="checklist-bar">
+            <div class="checklist-bar-fill" id="progress-fill"></div>
+          </div>
+          <div class="checklist-label i18n es"><strong id="cnt-done">0</strong> / 12 leídas</div>
+          <div class="checklist-label i18n en"><strong id="cnt-done-en">0</strong> / 12 read</div>
+        </div>
+
+        <div id="complete-badge" class="complete-badge">
+          <span class="complete-badge-icon">🎉</span>
+          <div class="complete-badge-text">
+            <strong class="i18n es">¡Completaste las 12 normas!</strong>
+            <strong class="i18n en">You completed all 12 rules!</strong>
+            <span class="i18n es">Gracias por cuidar Galápagos.</span>
+            <span class="i18n en">Thank you for caring for Galápagos.</span>
+          </div>
+        </div>
+
+        <div class="rule-list i18n es" id="rule-list-es" role="list"></div>
+        <div class="rule-list i18n en" id="rule-list-en" role="list"></div>
+        <p class="rule-tap-hint i18n es">Toca una norma para marcarla ✓</p>
+        <p class="rule-tap-hint i18n en">Tap a rule to check it ✓</p>
+      </section>
+
+      <!-- ─────────── LUGARES ─────────── -->
+      <span class="section-anchor" id="lugares"></span>
+      <section class="section" aria-labelledby="h-lugares">
+        <div class="section-head">
+          <h2 id="h-lugares" class="i18n es">Lugares imperdibles</h2>
+          <h2 id="h-lugares-en" class="i18n en">Must-see Places</h2>
+          <p class="i18n es">Sitios icónicos de San Cristóbal — cómo llegar, qué esperar y cómo cuidarlos.</p>
+          <p class="i18n en">Iconic spots on San Cristóbal — how to get there, what to expect and how to protect them.</p>
+        </div>
+
+        <div class="places-list">
+
+          <!-- Playa de Oro / La Lobería -->
+          <article class="place-card">
+            <div class="place-photo-wrap">
+              <img decoding="async"
+                src="https://commons.wikimedia.org/wiki/Special:FilePath/La_Loberia.jpg?width=1280"
+                alt="Playa La Lobería, San Cristóbal, Galápagos"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280'">
+              <span class="place-badge i18n es">🦭 Fauna marina</span>
+              <span class="place-badge i18n en">🦭 Marine wildlife</span>
+            </div>
+            <div class="place-body">
+              <h3 class="place-name">La Lobería</h3>
+              <p class="place-desc i18n es">Una de las playas más famosas de San Cristóbal, hogar de una gran colonia de lobos marinos que descansan libremente en la arena. Es zona de snorkel y buceo increíble, con tortugas y peces de colores.</p>
+              <p class="place-desc i18n en">One of San Cristóbal's most famous beaches, home to a large colony of sea lions that rest freely on the sand. Excellent snorkelling and diving spot with turtles and colourful fish.</p>
+              <div class="place-info-row three">
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Cómo llegar</div>
+                  <div class="place-info-label i18n en">How to get there</div>
+                  <p class="i18n es">~20 min en taxi desde Puerto Baquerizo Moreno</p>
+                  <p class="i18n en">~20 min by taxi from Puerto Baquerizo Moreno</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Entrada</div>
+                  <div class="place-info-label i18n en">Entry</div>
+                  <p class="i18n es">Libre — guía recomendado</p>
+                  <p class="i18n en">Free — guide recommended</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Mejor época</div>
+                  <div class="place-info-label i18n en">Best time</div>
+                  <p class="i18n es">Todo el año</p>
+                  <p class="i18n en">Year-round</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Kicker Rock -->
+          <article class="place-card">
+            <div class="place-photo-wrap">
+              <img decoding="async"
+                src="https://commons.wikimedia.org/wiki/Special:FilePath/Le%C3%B3n_Durmiente%2C_isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-25%2C_DD_08.JPG?width=1280"
+                alt="León Dormido, San Cristóbal, Galápagos"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280'">
+              <span class="place-badge i18n es">🦈 Buceo / Snorkel</span>
+              <span class="place-badge i18n en">🦈 Diving / Snorkel</span>
+            </div>
+            <div class="place-body">
+              <h3 class="place-name">León Dormido</h3>
+              <p class="place-desc i18n es">Formación volcánica icónica que emerge del océano Pacífico a 3 km de la costa. Su canal submarino alberga tiburones de Galápagos, rayas y tortugas marinas. Es considerado uno de los mejores sitios de buceo del archipiélago.</p>
+              <p class="place-desc i18n en">Iconic volcanic formation rising from the Pacific Ocean 3 km offshore. Its underwater channel is home to Galápagos sharks, rays and sea turtles — considered one of the archipelago's best diving sites.</p>
+              <div class="place-info-row">
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Cómo llegar</div>
+                  <div class="place-info-label i18n en">How to get there</div>
+                  <p class="i18n es">Tour en lancha desde el muelle (~1 h)</p>
+                  <p class="i18n en">Boat tour from the pier (~1 h)</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Acceso</div>
+                  <div class="place-info-label i18n en">Access</div>
+                  <p class="i18n es">Solo con tour autorizado. Llevar traje de neopreno.</p>
+                  <p class="i18n en">Authorised tour only. Bring wetsuit.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Punta Pitt -->
+          <article class="place-card">
+            <div class="place-photo-wrap">
+              <img decoding="async"
+                src="https://commons.wikimedia.org/wiki/Special:FilePath/Piquero_patiazul_%28Sula_nebouxii%29%2C_Punta_Pitt%2C_isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_66.JPG?width=1280"
+                alt="Piquero patiazul en Punta Pitt, San Cristóbal"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280'">
+              <span class="place-badge i18n es">🐦 Avistamiento de aves</span>
+              <span class="place-badge i18n en">🐦 Birdwatching</span>
+            </div>
+            <div class="place-body">
+              <h3 class="place-name">Punta Pitt</h3>
+              <p class="place-desc i18n es">El único sitio en Galápagos donde se pueden ver las tres especies de piqueros (patas azules, patas rojas y enmascarado) en un solo lugar. También anidan fragatas magníficas. El sendero ofrece vistas panorámicas espectaculares.</p>
+              <p class="place-desc i18n en">The only site in Galápagos where all three booby species (blue-footed, red-footed and masked) can be seen in one place. Magnificent frigatebirds also nest here. The trail offers spectacular panoramic views.</p>
+              <div class="place-info-row">
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Cómo llegar</div>
+                  <div class="place-info-label i18n en">How to get there</div>
+                  <p class="i18n es">Tour en barco desde Puerto Baquerizo (~1.5 h). No accesible por tierra.</p>
+                  <p class="i18n en">Boat tour from Puerto Baquerizo (~1.5 h). Not accessible by land.</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Nivel</div>
+                  <div class="place-info-label i18n en">Difficulty</div>
+                  <p class="i18n es">Moderado — sendero con pendiente</p>
+                  <p class="i18n en">Moderate — sloped trail</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Centro de Crianza Jacinto Gordillo -->
+          <article class="place-card">
+            <div class="place-photo-wrap">
+              <img decoding="async"
+                src="https://commons.wikimedia.org/wiki/Special:FilePath/Tortoise_nursery_in_Galapaguera_de_Cerro_Colorado%2C_Galapagos_Islands_2.JPG?width=1280"
+                alt="Tortugas en la Galapaguera de Cerro Colorado, San Cristóbal"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280'">
+              <span class="place-badge i18n es">🐢 Tortugas gigantes</span>
+              <span class="place-badge i18n en">🐢 Giant tortoises</span>
+            </div>
+            <div class="place-body">
+              <h3 class="place-name i18n es">Centro de Crianza Jacinto Gordillo</h3>
+              <h3 class="place-name i18n en">Jacinto Gordillo Breeding Centre</h3>
+              <p class="place-desc i18n es">Centro de reproducción y rescate de tortugas gigantes de la especie Chelonoidis chathamensis, endémica de San Cristóbal. Puedes ver tortugas de todas las edades, desde recién nacidas hasta adultas centenarias.</p>
+              <p class="place-desc i18n en">Breeding and rescue centre for giant tortoises of the species Chelonoidis chathamensis, endemic to San Cristóbal. You can see tortoises of all ages, from hatchlings to centenary adults.</p>
+              <div class="place-info-row three">
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Cómo llegar</div>
+                  <div class="place-info-label i18n en">How to get there</div>
+                  <p class="i18n es">~5 min en taxi desde el centro de Puerto Baquerizo Moreno</p>
+                  <p class="i18n en">~5 min taxi from Puerto Baquerizo Moreno centre</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Horario</div>
+                  <div class="place-info-label i18n en">Hours</div>
+                  <p>7:30 – 17:00</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Entrada</div>
+                  <div class="place-info-label i18n en">Entry</div>
+                  <p class="i18n es">Libre con guía autorizado</p>
+                  <p class="i18n en">Free with authorised guide</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Playa Mann -->
+          <article class="place-card">
+            <div class="place-photo-wrap">
+              <img decoding="async"
+                src="https://commons.wikimedia.org/wiki/Special:FilePath/Galapagos2007--01--07-13-07.JPG?width=1280"
+                alt="Playa Mann, San Cristóbal, Galápagos"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280'">
+              <span class="place-badge i18n es">🏖️ Playa</span>
+              <span class="place-badge i18n en">🏖️ Beach</span>
+            </div>
+            <div class="place-body">
+              <h3 class="place-name">Playa Mann</h3>
+              <p class="place-desc i18n es">La playa más visitada de la isla. Sus aguas tranquilas la hacen perfecta para familias: ideal para nadar, hacer kayak y observar lobos marinos que descansan en la orilla siempre a distancia segura.</p>
+              <p class="place-desc i18n en">The most visited beach on the island. Its calm waters make it perfect for families: ideal for swimming, kayaking and watching sea lions resting on the shore — always from a safe distance.</p>
+              <div class="place-info-row">
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Cómo llegar</div>
+                  <div class="place-info-label i18n en">How to get there</div>
+                  <p class="i18n es">Caminando desde el malecón — 10 min</p>
+                  <p class="i18n en">Walking from the boardwalk — 10 min</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Destacado</div>
+                  <div class="place-info-label i18n en">Highlight</div>
+                  <p class="i18n es">Kayak y lobos marinos en la orilla</p>
+                  <p class="i18n en">Kayaking and sea lions on the shore</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Cerro Tijeretas -->
+          <article class="place-card">
+            <div class="place-photo-wrap">
+              <img decoding="async"
+                src="https://commons.wikimedia.org/wiki/Special:FilePath/Fragata_com%C3%BAn_%28Fregata_minor%29%2C_isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_93.JPG?width=1280"
+                alt="Fragata en San Cristóbal, Galápagos"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280'">
+              <span class="place-badge i18n es">🏔️ Mirador · Fragatas</span>
+              <span class="place-badge i18n en">🏔️ Viewpoint · Frigatebirds</span>
+            </div>
+            <div class="place-body">
+              <h3 class="place-name">Cerro Tijeretas</h3>
+              <p class="place-desc i18n es">Colina de reserva ecológica con sendero hasta un mirador que ofrece vistas panorámicas de Puerto Baquerizo Moreno y el océano. En la cima anidan fragatas magníficas. Al bajar, la cala de snorkel es una de las mejores de la isla.</p>
+              <p class="place-desc i18n en">Ecological reserve hill with a trail to a viewpoint offering panoramic views of Puerto Baquerizo Moreno and the ocean. Magnificent frigatebirds nest at the top. The snorkel cove below is one of the island's best.</p>
+              <div class="place-info-row three">
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Cómo llegar</div>
+                  <div class="place-info-label i18n en">How to get there</div>
+                  <p class="i18n es">Caminando desde el puerto, ~30 min</p>
+                  <p class="i18n en">Walking from the port, ~30 min</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Nivel</div>
+                  <div class="place-info-label i18n en">Difficulty</div>
+                  <p class="i18n es">Fácil — sendero bien marcado</p>
+                  <p class="i18n en">Easy — well-marked trail</p>
+                </div>
+                <div class="place-info-chip">
+                  <div class="place-info-label i18n es">Entrada</div>
+                  <div class="place-info-label i18n en">Entry</div>
+                  <p class="i18n es">Libre</p>
+                  <p class="i18n en">Free</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div><!-- /places-list (real close) -->
+      </section>
+
+      <!-- ─────────── EMERGENCIAS ─────────── -->
+      <span class="section-anchor" id="emergencias"></span>
+      <section class="section" aria-labelledby="h-emergency">
+        <div class="section-head">
+          <h2 id="h-emergency" class="i18n es">Contactos de emergencia</h2>
+          <h2 id="h-emergency-en" class="i18n en">Emergency contacts</h2>
+          <p class="i18n es">Guarda estos números antes de salir a cualquier excursión.</p>
+          <p class="i18n en">Save these numbers before heading out on any excursion.</p>
+        </div>
+
+        <div class="emergency-section">
+          <div class="emergency-head">
+            <div class="emergency-icon">
+              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div>
+              <div class="emergency-title i18n es">Emergencias</div>
+              <div class="emergency-title i18n en">Emergency</div>
+              <div class="emergency-sub i18n es">Números útiles en San Cristóbal</div>
+              <div class="emergency-sub i18n en">Useful numbers on San Cristóbal</div>
+            </div>
+          </div>
+
+          <div class="ecard-grid">
+            <a class="ecard clickable" href="tel:911" style="text-decoration:none">
+              <div class="ecard-label i18n es">Emergencias</div>
+              <div class="ecard-label i18n en">Emergency</div>
+              <div class="ecard-number">911</div>
+              <div class="ecard-note i18n es">Ecuador · línea única</div>
+              <div class="ecard-note i18n en">Ecuador · national line</div>
+              <div class="ecard-call-hint">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" fill="currentColor"/></svg>
+                <span class="i18n es">Llamar</span><span class="i18n en">Call</span>
+              </div>
+            </a>
+            <a class="ecard clickable" href="tel:101" style="text-decoration:none">
+              <div class="ecard-label">Policía</div>
+              <div class="ecard-number">101</div>
+              <div class="ecard-note i18n es">Policía Nacional</div>
+              <div class="ecard-note i18n en">National Police</div>
+              <div class="ecard-call-hint">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" fill="currentColor"/></svg>
+                <span class="i18n es">Llamar</span><span class="i18n en">Call</span>
+              </div>
+            </a>
+            <a class="ecard clickable" href="tel:+593052521202" style="text-decoration:none">
+              <div class="ecard-label i18n es">Parque Nacional</div>
+              <div class="ecard-label i18n en">National Park</div>
+              <div class="ecard-number" style="font-size:1.05rem;padding-top:5px;line-height:1.3">PNG<br>San<br>Cristóbal</div>
+              <div class="ecard-note i18n es">Oficina local · (05) 252-1202</div>
+              <div class="ecard-note i18n en">Local office · (05) 252-1202</div>
+              <div class="ecard-call-hint">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" fill="currentColor"/></svg>
+                <span class="i18n es">Llamar</span><span class="i18n en">Call</span>
+              </div>
+            </a>
+            <a class="ecard clickable" href="tel:+593052520118" style="text-decoration:none">
+              <div class="ecard-label">Hospital</div>
+              <div class="ecard-number" style="font-size:1rem;padding-top:5px;line-height:1.3">Oskar<br>Jandl</div>
+              <div class="ecard-note i18n es">Pto. Baquerizo Moreno</div>
+              <div class="ecard-note i18n en">Pto. Baquerizo Moreno</div>
+              <div class="ecard-call-hint">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" fill="currentColor"/></svg>
+                <span class="i18n es">Llamar</span><span class="i18n en">Call</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="emergency-note">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span class="i18n es">Verifica siempre los números actualizados con tu guía turístico o en tu hotel antes de salir a excursiones. Los números pueden cambiar.</span>
+            <span class="i18n en">Always verify current numbers with your tour guide or hotel before heading out. Numbers may change.</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer shell">
+      <p class="i18n es">Normas basadas en fuentes de conservación y reglas del Parque Nacional Galápagos. Confirma siempre las reglas actualizadas con un guía autorizado.</p>
+      <p class="i18n en">Rules based on conservation sources and Galápagos National Park visiting rules. Always confirm updated rules with an authorised guide.</p>
+      <div class="footer-links i18n es">
+        <a href="https://www.darwinfoundation.org/es" target="_blank" rel="noreferrer">Fundación Charles Darwin</a>
+        <a href="https://galapagosconservation.org.uk" target="_blank" rel="noreferrer">Galapagos Conservation</a>
+        <a href="https://www.galapagos.org/travel/park-rules/" target="_blank" rel="noreferrer">Galápagos Conservancy</a>
+      </div>
+      <div class="footer-links i18n en">
+        <a href="https://www.darwinfoundation.org/en" target="_blank" rel="noreferrer">Charles Darwin Foundation</a>
+        <a href="https://galapagosconservation.org.uk" target="_blank" rel="noreferrer">Galapagos Conservation</a>
+        <a href="https://www.galapagos.org/travel/park-rules/" target="_blank" rel="noreferrer">Galápagos Conservancy</a>
+      </div>
+    </footer>
+  </div><!-- /site -->
+
+  <script>
+  // ═══ SERVICE WORKER ═══
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js').then(function(reg) {
+        console.log('[SW] Registrado:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[SW] Error al registrar:', err);
+      });
+    });
+  }
+
+  // ═══ RULES DATA ═══
+  var RULES = [
+    { id:'01', icon:'<circle cx="12" cy="12" r="3"></circle><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>',
+      es:{t:'Mantén distancia de la fauna', d:'Observa los animales desde al menos 2 metros. Si se acercan, retrocede con calma.'},
+      en:{t:'Keep your distance from wildlife', d:'Watch animals from at least 2 metres away. If they approach, step back calmly.'} },
+    { id:'02', icon:'<path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10M10 10.5v-3a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2V19a5 5 0 0 0 10 0v-9a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1"></path>',
+      es:{t:'No toques ni alimentes animales', d:'No los acaricies, no les des comida y no intentes llamar su atención.'},
+      en:{t:'Do not touch or feed animals', d:'Do not pet them, feed them or try to attract their attention.'} },
+    { id:'03', icon:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>',
+      es:{t:'Camina solo por senderos señalizados', d:'Salir del camino puede dañar plantas, nidos o zonas de descanso.'},
+      en:{t:'Walk only on marked trails', d:'Leaving the path can damage plants, nests or resting areas.'} },
+    { id:'04', icon:'<circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>',
+      es:{t:'No te lleves nada natural', d:'Conchas, rocas, arena, flores, semillas y huesos forman parte del ecosistema.'},
+      en:{t:'Do not take natural objects', d:'Shells, rocks, sand, flowers, seeds and bones are part of the ecosystem.'} },
+    { id:'05', icon:'<polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>',
+      es:{t:'Deposita tu basura correctamente', d:'Usa los contenedores. Si no hay uno cerca, lleva tus residuos contigo.'},
+      en:{t:'Dispose of waste properly', d:'Use available bins. If there is no bin nearby, take your waste with you.'} },
+    { id:'06', icon:'<path d="M8 2h8v3H8z"></path><path d="M7 5c-1 2-2 4-2 7a7 7 0 0 0 14 0c0-3-1-5-2-7"></path><line x1="9" y1="13" x2="15" y2="9"></line>',
+      es:{t:'Evita plásticos de un solo uso', d:'Una botella reutilizable ayuda a reducir residuos en playas y senderos.'},
+      en:{t:'Avoid single-use plastics', d:'A reusable bottle helps reduce waste on beaches and trails.'} },
+    { id:'07', icon:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><line x1="1" y1="1" x2="23" y2="23"></line>',
+      es:{t:'No uses flash ni drones sin permiso', d:'El flash puede alterar a la fauna. Los drones requieren autorización del Parque.'},
+      en:{t:'No flash or drones without permission', d:'Flash can disturb wildlife. Drones require Park authorisation.'} },
+    { id:'08', icon:'<circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>',
+      es:{t:'No fumes ni hagas fogatas', d:'El fuego, el humo y las colillas pueden causar daños graves al ecosistema.'},
+      en:{t:'Do not smoke or light campfires', d:'Fire, smoke and cigarette ends can cause serious ecosystem damage.'} },
+    { id:'09', icon:'<path d="M12 22V12"></path><path d="M5 12C5 6.5 8.5 2 12 2s7 4.5 7 10"></path><path d="M8.7 9.3A5 5 0 0 1 12 7"></path>',
+      es:{t:'No introduzcas semillas, frutas ni plantas', d:'El material orgánico puede traer plagas o especies invasoras al archipiélago.'},
+      en:{t:'Do not bring seeds, fruit or plants', d:'Organic material can carry pests or invasive species to the archipelago.'} },
+    { id:'10', icon:'<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>',
+      es:{t:'Respeta horarios y señales', d:'Las señales marcan límites necesarios para cuidar la fauna y tu seguridad.'},
+      en:{t:'Respect signs and visiting hours', d:'Signs mark limits needed to protect wildlife and keep you safe.'} },
+    { id:'11', icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline>',
+      es:{t:'Usa servicios turísticos autorizados', d:'Guías y operadores autorizados conocen las normas y garantizan visitas seguras.'},
+      en:{t:'Use authorised tourism services', d:'Authorised guides and operators know the rules and ensure safe visits.'} },
+    { id:'12', icon:'<path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>',
+      es:{t:'Respeta el silencio natural', d:'Evita música fuerte. Usa audífonos para no molestar a animales ni a otras personas.'},
+      en:{t:'Respect natural quiet', d:'Avoid loud music. Use headphones so you do not disturb animals or other people.'} }
+  ];
+
+  // ═══ STATE ═══
+  function getChecked() { try { return JSON.parse(localStorage.getItem('checkedRules')||'[]'); } catch(e){ return []; } }
+  function saveChecked(arr) { try { localStorage.setItem('checkedRules', JSON.stringify(arr)); } catch(e){} }
+
+  // ═══ RENDER RULES ═══
+  function renderRules() {
+    var checked = getChecked();
+    ['es','en'].forEach(function(lang) {
+      var el = document.getElementById('rule-list-'+lang);
+      if (!el) return;
+      el.innerHTML = RULES.map(function(r, idx) {
+        var isChecked = checked.indexOf(r.id) !== -1;
+        var t = r[lang];
+        return '<div class="rule'+(isChecked?' checked':'')+'" data-id="'+r.id+'" role="checkbox" aria-checked="'+isChecked+'" tabindex="0">' +
+          '<div class="rule-icon-wrap">' +
+            '<svg class="rule-icon" viewBox="0 0 24 24" aria-hidden="true">'+r.icon+'</svg>' +
+            '<div class="rule-check-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' +
+          '</div>' +
+          '<div><strong>'+t.t+'</strong><p>'+t.d+'</p></div>' +
+          '<div class="rule-num">'+(idx+1).toString().padStart(2,'0')+'</div>' +
+        '</div>';
+      }).join('');
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var count = getChecked().length;
+    var pct = (count / RULES.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('cnt-done').textContent = count;
+    var cde = document.getElementById('cnt-done-en');
+    if (cde) cde.textContent = count;
+    var badge = document.getElementById('complete-badge');
+    if (badge) {
+      if (count === RULES.length && !badge.classList.contains('show')) {
+        badge.classList.add('show');
+        launchConfetti();
+      } else if (count < RULES.length) {
+        badge.classList.remove('show');
+      }
+    }
+  }
+
+  // ═══ RULE INTERACTION ═══
+  document.addEventListener('click', function(e) {
+    var rule = e.target.closest('.rule');
+    if (!rule) return;
+    var id = rule.dataset.id;
+    var checked = getChecked();
+    var idx = checked.indexOf(id);
+    var nowChecked = idx === -1;
+    if (nowChecked) { checked.push(id); } else { checked.splice(idx, 1); }
+    saveChecked(checked);
+    document.querySelectorAll('[data-id="'+id+'"]').forEach(function(el) {
+      el.classList.toggle('checked', nowChecked);
+      el.setAttribute('aria-checked', nowChecked);
+    });
+    if (navigator.vibrate) navigator.vibrate(nowChecked ? [10,0,20] : [8]);
+    updateProgress();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key===' '||e.key==='Enter') {
+      var rule = e.target.closest('.rule');
+      if (rule) { e.preventDefault(); rule.click(); }
+    }
+  });
+
+  // ═══ QUICK NAV ACTIVE STATE ═══
+  function updateNavActive() {
+    var sections = [
+      { id: 'normas',      el: document.getElementById('normas') },
+      { id: 'lugares',     el: document.getElementById('lugares') },
+      { id: 'emergencias', el: document.getElementById('emergencias') }
+    ];
+    var scrollY = window.scrollY + 140;
+    var current = 'normas';
+    sections.forEach(function(s) {
+      if (s.el && s.el.getBoundingClientRect().top + window.scrollY <= scrollY) {
+        current = s.id;
+      }
+    });
+    document.querySelectorAll('.quick-nav-btn').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.nav === current);
+    });
+  }
+  window.addEventListener('scroll', updateNavActive, {passive:true});
+
+  // ═══ LANGUAGE ═══
+  function setLanguage(lang) {
+    lang = (lang==='en') ? 'en' : 'es';
+    document.documentElement.lang = lang;
+    document.body.classList.remove('lang-es','lang-en','ready');
+    document.body.classList.add('lang-'+lang,'ready');
+    try { localStorage.setItem('scLang', lang); } catch(e){}
+    var shareBtn = document.getElementById('btn-share');
+    if (shareBtn) shareBtn.setAttribute('aria-label', lang==='en' ? 'Share' : 'Compartir');
+  }
+  document.querySelectorAll('[data-set-lang]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      setLanguage(btn.getAttribute('data-set-lang'));
+      if (navigator.vibrate) navigator.vibrate(12);
+    });
+  });
+
+  // ═══ INIT ═══
+  document.addEventListener('DOMContentLoaded', function() {
+    renderRules();
+    var saved; try { saved = localStorage.getItem('scLang'); } catch(e){}
+    if (saved==='es'||saved==='en') { setLanguage(saved); return; }
+    // Si no hay preferencia guardada, mostrar el language gate sin aplicar ningún idioma
+    // (la gate permanece visible hasta que el usuario elija)
+    // Pero aseguramos que los elementos de la gate sean visibles igualmente
+  });
+
+  // ═══ READING PROGRESS ═══
+  window.addEventListener('scroll', function() {
+    var total = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = total > 0 ? (window.scrollY / total) * 100 : 0;
+    document.getElementById('read-progress').style.width = pct + '%';
+  }, {passive:true});
+
+  // ═══ SHARE ═══
+  document.getElementById('btn-share').addEventListener('click', async function() {
+    var isEn = document.body.classList.contains('lang-en');
+    var data = {
+      title: 'San Cristóbal Responsable',
+      text: isEn ? 'Environmental guide for visiting San Cristóbal, Galápagos' : 'Guía ambiental para visitar San Cristóbal, Galápagos',
+      url: window.location.href
+    };
+    if (navigator.share) { try { await navigator.share(data); } catch(e){} }
+    else if (navigator.clipboard) {
+      try { await navigator.clipboard.writeText(window.location.href); showToast(isEn?'✓ Link copied!':'✓ ¡Enlace copiado!'); } catch(e){}
+    }
+  });
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2400);
+  }
+
+  // ═══ OFFLINE ═══
+  function syncOnline() {
+    document.getElementById('offline-banner').classList.toggle('show', !navigator.onLine);
+  }
+  window.addEventListener('online', syncOnline);
+  window.addEventListener('offline', syncOnline);
+  syncOnline();
+
+  // ═══ PWA ═══
+  var deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault(); deferredPrompt = e;
+    try {
+      if (!localStorage.getItem('pwaInstallDismissed')) {
+        setTimeout(function(){ document.getElementById('install-banner').classList.add('show'); }, 5000);
+      }
+    } catch(err){}
+  });
+  document.getElementById('btn-pwa-install').addEventListener('click', async function() {
+    document.getElementById('install-banner').classList.remove('show');
+    if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
+  });
+  document.getElementById('btn-pwa-dismiss').addEventListener('click', function() {
+    document.getElementById('install-banner').classList.remove('show');
+    try { localStorage.setItem('pwaInstallDismissed','1'); } catch(e){}
+  });
+
+  // ═══ CONFETTI ═══
+  function launchConfetti() {
+    var canvas = document.getElementById('confetti-canvas');
+    var ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.classList.add('show');
+    var colors = ['#1a4a5e','#4a9ab8','#2d7a4f','#5dc882','#f5e6c8','#d97706','#5ab8d8'];
+    var particles = Array.from({length:80}, function() {
+      return {
+        x: Math.random() * canvas.width,
+        y: -10 - Math.random() * 40,
+        r: 4 + Math.random() * 6,
+        d: 1 + Math.random() * 2,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        vx: (Math.random() - .5) * 2,
+        angle: Math.random() * 360,
+        spin: (Math.random() - .5) * 8
+      };
+    });
+    var frame = 0;
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(function(p) {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.angle * Math.PI/180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * 1.5); ctx.restore();
+        p.y += p.d; p.x += p.vx; p.angle += p.spin;
+        if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+      });
+      frame++;
+      if (frame < 180) { requestAnimationFrame(draw); }
+      else { canvas.classList.remove('show'); ctx.clearRect(0,0,canvas.width,canvas.height); }
+    }
+    draw();
+    showToast(document.body.classList.contains('lang-en') ? '🎉 You completed all 12 rules!' : '🎉 ¡Completaste las 12 normas!');
+  }
+  </script>
+</body>
+</html>
