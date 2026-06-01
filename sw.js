@@ -1,28 +1,38 @@
 // ═══════════════════════════════════════════════════════
 //  San Cristóbal Responsable — Service Worker
-//  Estrategia: Cache-first para el HTML/fuentes,
-//              Network-first con fallback para imágenes
+//  Estrategia:
+//  - HTML / página principal: Network-first con timeout
+//  - Internet bueno: carga versión nueva
+//  - Internet lento o sin internet: usa caché
+//  - Imágenes y fuentes: cache-first para ahorrar datos
 // ═══════════════════════════════════════════════════════
 
-const CACHE_NAME    = 'sc-responsable-v1';
-const IMG_CACHE     = 'sc-images-v1';
+// IMPORTANTE:
+// Cada vez que hagas cambios fuertes en index.html, puedes subir la versión:
+// sc-responsable-v2 → sc-responsable-v3 → sc-responsable-v4
+const CACHE_NAME = 'sc-responsable-v2';
+const IMG_CACHE = 'sc-images-v2';
 
-// Archivos del "app shell" — se cachean en la instalación
+// Tiempo máximo de espera para cargar la página desde internet.
+// Si tarda más de 3 segundos y ya existe caché, muestra caché.
+const NETWORK_TIMEOUT = 3000;
+
+// Archivos principales de la página
 const SHELL = [
-  './san-cristobal-responsable-corregido.html',
+  './',
+  './index.html',
   './manifest.json',
-  // Fuentes de Google (se cachean en la primera visita)
+
+  // Fuentes de Google
   'https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap',
   'https://fonts.gstatic.com/s/dmserifdisplay/v16/-nFnOHM81r4j6k0gjALR8uVMpNt9-WkBGBe4.woff2',
   'https://fonts.gstatic.com/s/plusjakartasans/v8/LDIoaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA.woff2'
 ];
 
-// URLs de imágenes a pre-cachear (las que aparecen en la guía)
+// Imágenes principales de la guía
 const IMAGES = [
-  // Hero y language gate
   'https://commons.wikimedia.org/wiki/Special:FilePath/Galapagos2007--53--08-23-07.JPG?width=1280',
   'https://commons.wikimedia.org/wiki/Special:FilePath/Isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_88.JPG?width=1280',
-  // Lugares
   'https://commons.wikimedia.org/wiki/Special:FilePath/La_Loberia.jpg?width=1280',
   'https://commons.wikimedia.org/wiki/Special:FilePath/Le%C3%B3n_Durmiente%2C_isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-25%2C_DD_08.JPG?width=1280',
   'https://commons.wikimedia.org/wiki/Special:FilePath/Piquero_patiazul_%28Sula_nebouxii%29%2C_Punta_Pitt%2C_isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_66.JPG?width=1280',
@@ -31,114 +41,202 @@ const IMAGES = [
   'https://commons.wikimedia.org/wiki/Special:FilePath/Fragata_com%C3%BAn_%28Fregata_minor%29%2C_isla_de_San_Crist%C3%B3bal%2C_islas_Gal%C3%A1pagos%2C_Ecuador%2C_2015-07-24%2C_DD_93.JPG?width=1280'
 ];
 
-// ── INSTALL: cachear el app shell ──────────────────────
-self.addEventListener('install', function(e) {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      // Cachear shell obligatorio
-      return cache.addAll(SHELL).catch(function(err) {
-        console.warn('[SW] No se pudo cachear algún archivo del shell:', err);
-      });
-    }).then(function() {
-      // Cachear imágenes en segundo plano (sin bloquear la instalación)
-      caches.open(IMG_CACHE).then(function(imgCache) {
-        IMAGES.forEach(function(url) {
-          fetch(url, { mode: 'no-cors' })
-            .then(function(res) { imgCache.put(url, res); })
-            .catch(function() { /* imagen no disponible, no bloquea */ });
-        });
-      });
+// ─────────────────────────────────────────────────────
+// Función: guardar archivos sin romper la instalación
+// Si una fuente o imagen falla, no daña toda la PWA.
+// ─────────────────────────────────────────────────────
+async function addAllSafe(cacheName, urls) {
+  const cache = await caches.open(cacheName);
+
+  await Promise.allSettled(
+    urls.map(async function(url) {
+      try {
+        await cache.add(url);
+      } catch (err) {
+        console.warn('[SW] No se pudo cachear:', url, err);
+      }
+    })
+  );
+}
+
+// ─────────────────────────────────────────────────────
+// Función: network-first con timeout
+// Sirve para index.html y navegación principal.
+// ─────────────────────────────────────────────────────
+async function networkFirstWithTimeout(request) {
+  const cache = await caches.open(CACHE_NAME);
+
+  const cached =
+    await cache.match(request) ||
+    await cache.match('./index.html') ||
+    await cache.match('./');
+
+  const networkFetch = fetch(request)
+    .then(function(response) {
+      if (response && response.ok) {
+        cache.put(request, response.clone());
+      }
+      return response;
+    })
+    .catch(function() {
+      return cached;
+    });
+
+  // Si no hay caché todavía, toca esperar la red.
+  // Esto pasa la primera vez que alguien entra.
+  if (!cached) {
+    return networkFetch;
+  }
+
+  // Si ya hay caché, esperamos red solo unos segundos.
+  const timeout = new Promise(function(resolve) {
+    setTimeout(function() {
+      resolve(cached);
+    }, NETWORK_TIMEOUT);
+  });
+
+  return Promise.race([networkFetch, timeout]);
+}
+
+// ─────────────────────────────────────────────────────
+// INSTALL
+// ─────────────────────────────────────────────────────
+self.addEventListener('install', function(event) {
+  event.waitUntil(
+    Promise.all([
+      addAllSafe(CACHE_NAME, SHELL),
+      addAllSafe(IMG_CACHE, IMAGES)
+    ]).then(function() {
       return self.skipWaiting();
     })
   );
 });
 
-// ── ACTIVATE: limpiar cachés viejas ───────────────────
-self.addEventListener('activate', function(e) {
-  e.waitUntil(
-    caches.keys().then(function(keys) {
-      return Promise.all(
-        keys.filter(function(k) {
-          return k !== CACHE_NAME && k !== IMG_CACHE;
-        }).map(function(k) {
-          console.log('[SW] Eliminando caché vieja:', k);
-          return caches.delete(k);
-        })
-      );
-    }).then(function() {
-      return self.clients.claim();
-    })
+// ─────────────────────────────────────────────────────
+// ACTIVATE
+// Limpia cachés viejas, por ejemplo v1.
+// ─────────────────────────────────────────────────────
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys()
+      .then(function(keys) {
+        return Promise.all(
+          keys
+            .filter(function(key) {
+              return key !== CACHE_NAME && key !== IMG_CACHE;
+            })
+            .map(function(key) {
+              console.log('[SW] Eliminando caché vieja:', key);
+              return caches.delete(key);
+            })
+        );
+      })
+      .then(function() {
+        return self.clients.claim();
+      })
   );
 });
 
-// ── FETCH: estrategia por tipo de recurso ─────────────
-self.addEventListener('fetch', function(e) {
-  var url = e.request.url;
+// ─────────────────────────────────────────────────────
+// FETCH
+// ─────────────────────────────────────────────────────
+self.addEventListener('fetch', function(event) {
+  const request = event.request;
+  const url = new URL(request.url);
 
   // Solo manejar GET
-  if (e.request.method !== 'GET') return;
+  if (request.method !== 'GET') return;
 
-  // ── Imágenes: cache-first, con fallback a red ──
-  if (url.includes('commons.wikimedia.org') ||
-      url.match(/\.(jpg|jpeg|png|gif|webp|svg)(\?|$)/i)) {
-    e.respondWith(
+  // ───────────────────────────────────────────────────
+  // 1. Página principal / HTML:
+  // Network-first con timeout.
+  // ───────────────────────────────────────────────────
+  if (
+    request.mode === 'navigate' ||
+    url.pathname.endsWith('/') ||
+    url.pathname.endsWith('/index.html') ||
+    url.pathname.endsWith('.html')
+  ) {
+    event.respondWith(networkFirstWithTimeout(request));
+    return;
+  }
+
+  // ───────────────────────────────────────────────────
+  // 2. Manifest:
+  // Network-first, pero con caché si falla.
+  // ───────────────────────────────────────────────────
+  if (url.pathname.endsWith('manifest.json')) {
+    event.respondWith(networkFirstWithTimeout(request));
+    return;
+  }
+
+  // ───────────────────────────────────────────────────
+  // 3. Imágenes:
+  // Cache-first para ahorrar datos y cargar rápido.
+  // Si no está en caché, intenta descargarla.
+  // ───────────────────────────────────────────────────
+  if (
+    url.hostname.includes('commons.wikimedia.org') ||
+    url.pathname.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)
+  ) {
+    event.respondWith(
       caches.open(IMG_CACHE).then(function(cache) {
-        return cache.match(e.request).then(function(cached) {
+        return cache.match(request).then(function(cached) {
           if (cached) return cached;
-          return fetch(e.request, { mode: 'no-cors' }).then(function(res) {
-            // Guardar para la próxima vez
-            cache.put(e.request, res.clone());
-            return res;
-          }).catch(function() {
-            // Sin imagen y sin red → devolver respuesta vacía
-            return new Response('', { status: 408 });
-          });
+
+          return fetch(request, { mode: 'no-cors' })
+            .then(function(response) {
+              cache.put(request, response.clone());
+              return response;
+            })
+            .catch(function() {
+              return new Response('', {
+                status: 408,
+                statusText: 'Imagen no disponible sin conexión'
+              });
+            });
         });
       })
     );
     return;
   }
 
-  // ── Fuentes de Google: cache-first ──
-  if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
-    e.respondWith(
+  // ───────────────────────────────────────────────────
+  // 4. Fuentes:
+  // Cache-first para no gastar datos cada vez.
+  // ───────────────────────────────────────────────────
+  if (
+    url.hostname.includes('fonts.googleapis.com') ||
+    url.hostname.includes('fonts.gstatic.com')
+  ) {
+    event.respondWith(
       caches.open(CACHE_NAME).then(function(cache) {
-        return cache.match(e.request).then(function(cached) {
+        return cache.match(request).then(function(cached) {
           if (cached) return cached;
-          return fetch(e.request).then(function(res) {
-            cache.put(e.request, res.clone());
-            return res;
-          }).catch(function() {
-            return cached || new Response('', { status: 408 });
-          });
+
+          return fetch(request)
+            .then(function(response) {
+              if (response && response.ok) {
+                cache.put(request, response.clone());
+              }
+              return response;
+            })
+            .catch(function() {
+              return cached || new Response('', { status: 408 });
+            });
         });
       })
     );
     return;
   }
 
-  // ── HTML y archivos locales: cache-first, actualiza en background ──
-  if (url.includes('san-cristobal') || url.endsWith('.html') || url.endsWith('manifest.json')) {
-    e.respondWith(
-      caches.open(CACHE_NAME).then(function(cache) {
-        return cache.match(e.request).then(function(cached) {
-          var networkFetch = fetch(e.request).then(function(res) {
-            if (res.ok) cache.put(e.request, res.clone());
-            return res;
-          }).catch(function() { return null; });
-
-          // Devolver cache inmediatamente si existe, y actualizar en segundo plano
-          return cached || networkFetch;
-        });
-      })
-    );
-    return;
-  }
-
-  // Todo lo demás: red normal con fallback a caché
-  e.respondWith(
-    fetch(e.request).catch(function() {
-      return caches.match(e.request);
+  // ───────────────────────────────────────────────────
+  // 5. Todo lo demás:
+  // Red normal, fallback a caché.
+  // ───────────────────────────────────────────────────
+  event.respondWith(
+    fetch(request).catch(function() {
+      return caches.match(request);
     })
   );
 });
