@@ -36,6 +36,10 @@
       --alert-bg:   oklch(97% 0.03 55);
       --alert-ink:  oklch(30% 0.07 45);
       --alert-line: oklch(82% 0.08 58);
+      --danger-bg:   oklch(97% 0.025 25);
+      --danger-line: oklch(82% 0.08 20);
+      --danger:      oklch(52% 0.18 25);
+      --danger-dark: oklch(38% 0.16 22);
       --shadow:     0 22px 60px oklch(35% 0.05 190 / 0.16);
       --ease-out:   cubic-bezier(0.23, 1, 0.32, 1);
       --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -60,6 +64,10 @@
         --alert-bg:   oklch(17% 0.04 55);
         --alert-ink:  oklch(86% 0.06 60);
         --alert-line: oklch(34% 0.08 58);
+        --danger-bg:   oklch(14% 0.04 22);
+        --danger-line: oklch(32% 0.10 22);
+        --danger:      oklch(68% 0.16 25);
+        --danger-dark: oklch(76% 0.14 25);
         --shadow:     0 22px 60px oklch(4% 0.02 190 / 0.55);
       }
     }
@@ -528,6 +536,118 @@
     }
     .emergency-note svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; fill: none; stroke: oklch(55% 0.12 55); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
+    /* ─── CONSEQUENCES ─── */
+    .consequences-grid {
+      display: grid; grid-template-columns: 1fr; gap: 14px;
+    }
+    .consequence-card {
+      border-radius: 24px; overflow: hidden;
+      background: var(--paper); border: 1px solid var(--line);
+      box-shadow: 0 6px 24px oklch(35% 0.05 20 / 0.07);
+      transition: transform 200ms var(--ease-out), box-shadow 200ms;
+    }
+    .consequence-card:hover { transform: translateY(-2px); box-shadow: 0 12px 36px oklch(35% 0.07 20 / 0.13); }
+    .consequence-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px 20px 14px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; user-select: none;
+    }
+    .consequence-icon-wrap {
+      width: 46px; height: 46px; border-radius: 16px; flex-shrink: 0;
+      background: oklch(93% 0.05 22); display: grid; place-items: center;
+    }
+    @media (prefers-color-scheme: dark) { .consequence-icon-wrap { background: oklch(22% 0.07 22); } }
+    .consequence-icon-wrap svg {
+      width: 22px; height: 22px; stroke: var(--danger-dark); fill: none;
+      stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+    }
+    @media (prefers-color-scheme: dark) { .consequence-icon-wrap svg { stroke: var(--danger); } }
+    .consequence-title-block { flex: 1; min-width: 0; }
+    .consequence-title-block strong {
+      display: block; font-size: 1.02rem; font-weight: 800; margin-bottom: 3px;
+      color: var(--ink);
+    }
+    .consequence-title-block span {
+      font-size: 0.83rem; color: var(--muted); line-height: 1.45;
+    }
+    .consequence-chevron {
+      width: 24px; height: 24px; flex-shrink: 0; color: var(--muted);
+      transition: transform 280ms var(--ease-out);
+    }
+    .consequence-card.open .consequence-chevron { transform: rotate(180deg); }
+    .consequence-chevron svg {
+      width: 100%; height: 100%; stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .consequence-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 360ms var(--ease-out), opacity 300ms;
+      opacity: 0;
+    }
+    .consequence-card.open .consequence-body { max-height: 600px; opacity: 1; }
+    .consequence-inner {
+      padding: 0 20px 20px; display: grid; gap: 10px;
+    }
+    .consequence-stat-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .consequence-stat {
+      padding: 13px 15px; border-radius: 16px;
+      background: oklch(96% 0.03 22); border: 1px solid oklch(88% 0.06 22);
+    }
+    @media (prefers-color-scheme: dark) {
+      .consequence-stat { background: oklch(18% 0.05 22); border-color: oklch(30% 0.08 22); }
+    }
+    .consequence-stat-label {
+      font-size: 0.67rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--danger-dark); margin-bottom: 4px;
+    }
+    @media (prefers-color-scheme: dark) { .consequence-stat-label { color: var(--danger); } }
+    .consequence-stat p {
+      margin: 0; font-size: 0.88rem; color: var(--ink); line-height: 1.4; font-weight: 600;
+    }
+    .consequence-divider { height: 1px; background: var(--line); margin: 0 0 2px; }
+    .consequence-fine {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 13px 15px; border-radius: 16px;
+      background: oklch(96% 0.03 22); border: 1px solid oklch(85% 0.07 22);
+    }
+    @media (prefers-color-scheme: dark) {
+      .consequence-fine { background: oklch(17% 0.05 22); border-color: oklch(32% 0.09 22); }
+    }
+    .consequence-fine-icon {
+      font-size: 1.3rem; line-height: 1; flex-shrink: 0; margin-top: 1px;
+    }
+    .consequence-fine-text { flex: 1; }
+    .consequence-fine-text strong {
+      display: block; font-size: 0.8rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--danger-dark); margin-bottom: 3px;
+    }
+    @media (prefers-color-scheme: dark) { .consequence-fine-text strong { color: var(--danger); } }
+    .consequence-fine-text p { margin: 0; font-size: 0.88rem; color: var(--ink); line-height: 1.45; font-weight: 600; }
+    .impact-banner {
+      padding: 18px 20px; border-radius: 24px;
+      background: linear-gradient(135deg, oklch(92% 0.04 22), oklch(93% 0.03 40));
+      border: 1px solid oklch(83% 0.07 22);
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    @media (prefers-color-scheme: dark) {
+      .impact-banner {
+        background: linear-gradient(135deg, oklch(16% 0.06 22), oklch(18% 0.04 40));
+        border-color: oklch(32% 0.09 22);
+      }
+    }
+    .impact-banner-icon { font-size: 2rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+    .impact-banner-text { flex: 1; }
+    .impact-banner-text strong {
+      display: block; font-size: 1rem; font-weight: 800;
+      color: var(--danger-dark); margin-bottom: 5px;
+    }
+    @media (prefers-color-scheme: dark) { .impact-banner-text strong { color: var(--danger); } }
+    .impact-banner-text p {
+      margin: 0; font-size: 0.9rem; color: var(--ink); line-height: 1.55; font-weight: 500;
+    }
+
     /* ─── FOOTER ─── */
     .site-footer {
       margin-top: 12px; padding: 28px 0 calc(32px + var(--safe-bottom));
@@ -640,6 +760,10 @@
           <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <span class="i18n es">Lugares</span><span class="i18n en">Places</span>
         </a>
+        <a class="quick-nav-btn" href="#consecuencias" data-nav="consecuencias">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><circle cx="12" cy="17" r="1" fill="currentColor"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
+          <span class="i18n es">Impacto</span><span class="i18n en">Impact</span>
+        </a>
         <a class="quick-nav-btn" href="#emergencias" data-nav="emergencias">
           <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           <span class="i18n es">Emergencias</span><span class="i18n en">Emergency</span>
@@ -700,6 +824,290 @@
         <div class="rule-list i18n en" id="rule-list-en" role="list"></div>
         <p class="rule-tap-hint i18n es">Toca una norma para marcarla ✓</p>
         <p class="rule-tap-hint i18n en">Tap a rule to check it ✓</p>
+      </section>
+
+      <!-- ─────────── CONSECUENCIAS / IMPACTO ─────────── -->
+      <span class="section-anchor" id="consecuencias"></span>
+      <section class="section" aria-labelledby="h-consecuencias">
+        <div class="section-head">
+          <h2 id="h-consecuencias" class="i18n es">¿Qué pasa si no hacemos caso?</h2>
+          <h2 id="h-consecuencias-en" class="i18n en">What happens if we ignore the rules?</h2>
+          <p class="i18n es">Cada acción irresponsable deja una huella real en el ecosistema más único del planeta. Estas son las consecuencias concretas.</p>
+          <p class="i18n en">Every irresponsible action leaves a real mark on the planet's most unique ecosystem. These are the concrete consequences.</p>
+        </div>
+
+        <!-- Banner general -->
+        <div class="impact-banner" style="margin-bottom:18px">
+          <div class="impact-banner-icon">🌍</div>
+          <div class="impact-banner-text">
+            <strong class="i18n es">Galápagos es Patrimonio Natural de la Humanidad</strong>
+            <strong class="i18n en">Galápagos is a World Natural Heritage Site</strong>
+            <p class="i18n es">El 97% del territorio insular es Parque Nacional protegido. Las infracciones no solo dañan la naturaleza, sino que pueden conllevar sanciones administrativas y penales bajo la Ley Orgánica de Biodiversidad del Ecuador.</p>
+            <p class="i18n en">97% of the island territory is a protected National Park. Violations not only harm nature — they can lead to administrative and criminal penalties under Ecuador's Organic Law on Biodiversity.</p>
+          </div>
+        </div>
+
+        <div class="consequences-grid">
+
+          <!-- 1. Fauna -->
+          <div class="consequence-card" data-cons="fauna">
+            <div class="consequence-header" onclick="toggleCons(this)">
+              <div class="consequence-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </div>
+              <div class="consequence-title-block">
+                <strong class="i18n es">Molestar o tocar fauna silvestre</strong>
+                <strong class="i18n en">Disturbing or touching wildlife</strong>
+                <span class="i18n es">Estrés, abandono de crías y transmisión de enfermedades</span>
+                <span class="i18n en">Stress, abandonment of young and disease transmission</span>
+              </div>
+              <div class="consequence-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="consequence-body">
+              <div class="consequence-inner">
+                <div class="consequence-stat-row">
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Impacto inmediato</div>
+                    <div class="consequence-stat-label i18n en">Immediate impact</div>
+                    <p class="i18n es">Las madres pueden abandonar a sus crías al detectar olor humano. Los animales alterados dejan de alimentarse.</p>
+                    <p class="i18n en">Mothers may abandon offspring after detecting human scent. Disturbed animals stop feeding.</p>
+                  </div>
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">A largo plazo</div>
+                    <div class="consequence-stat-label i18n en">Long-term</div>
+                    <p class="i18n es">Pérdida de la confianza natural de la fauna hacia humanos, que es el mayor tesoro de Galápagos.</p>
+                    <p class="i18n en">Loss of wildlife's natural trust in humans — Galápagos' greatest treasure.</p>
+                  </div>
+                </div>
+                <div class="consequence-fine">
+                  <div class="consequence-fine-icon">⚖️</div>
+                  <div class="consequence-fine-text">
+                    <strong class="i18n es">Sanción legal</strong>
+                    <strong class="i18n en">Legal penalty</strong>
+                    <p class="i18n es">El Parque Nacional puede expulsar al infractor de inmediato y prohibir su reingreso hasta por dos años. Las multas por daño ambiental en Galápagos van de 10 hasta 1,000 salarios mínimos según la gravedad.</p>
+                    <p class="i18n en">The National Park can immediately expel the offender and ban re-entry for up to two years. Environmental fines in Galápagos range from 10 to 1,000 minimum wages depending on severity.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Basura y plásticos -->
+          <div class="consequence-card" data-cons="basura">
+            <div class="consequence-header" onclick="toggleCons(this)">
+              <div class="consequence-icon-wrap">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              </div>
+              <div class="consequence-title-block">
+                <strong class="i18n es">Dejar basura o plásticos</strong>
+                <strong class="i18n en">Leaving rubbish or plastics</strong>
+                <span class="i18n es">Ingesta mortal en tortugas, lobos marinos y aves</span>
+                <span class="i18n en">Fatal ingestion by tortoises, sea lions and birds</span>
+              </div>
+              <div class="consequence-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="consequence-body">
+              <div class="consequence-inner">
+                <div class="consequence-stat-row">
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Fauna marina</div>
+                    <div class="consequence-stat-label i18n en">Marine wildlife</div>
+                    <p class="i18n es">Las tortugas confunden bolsas plásticas con medusas. La ingesta bloquea el sistema digestivo y es mortal.</p>
+                    <p class="i18n en">Turtles mistake plastic bags for jellyfish. Ingestion blocks the digestive system and is fatal.</p>
+                  </div>
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Aves marinas</div>
+                    <div class="consequence-stat-label i18n en">Seabirds</div>
+                    <p class="i18n es">Los piqueros y fragatas alimentan a sus polluelos con fragmentos de plástico creyendo que son presas.</p>
+                    <p class="i18n en">Boobies and frigatebirds feed their chicks plastic fragments thinking they are prey.</p>
+                  </div>
+                </div>
+                <div class="consequence-fine">
+                  <div class="consequence-fine-icon">⚖️</div>
+                  <div class="consequence-fine-text">
+                    <strong class="i18n es">Sanción legal</strong>
+                    <strong class="i18n en">Legal penalty</strong>
+                    <p class="i18n es">Los guardaparques pueden retirar al infractor del área protegida. Abandonar residuos en Galápagos es una infracción ambiental con multas y posible expulsión de la provincia.</p>
+                    <p class="i18n en">Rangers can remove the offender from the protected area. Littering in Galápagos is an environmental violation with fines and possible expulsion from the province.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Salir del sendero -->
+          <div class="consequence-card" data-cons="sendero">
+            <div class="consequence-header" onclick="toggleCons(this)">
+              <div class="consequence-icon-wrap">
+                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div class="consequence-title-block">
+                <strong class="i18n es">Salir de los senderos señalizados</strong>
+                <strong class="i18n en">Leaving marked trails</strong>
+                <span class="i18n es">Aplastamiento de nidos y destrucción de vegetación endémica</span>
+                <span class="i18n en">Crushing of nests and destruction of endemic vegetation</span>
+              </div>
+              <div class="consequence-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="consequence-body">
+              <div class="consequence-inner">
+                <div class="consequence-stat-row">
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Nidos ocultos</div>
+                    <div class="consequence-stat-label i18n en">Hidden nests</div>
+                    <p class="i18n es">Muchas aves como el albatros de Galápagos anidan directamente en el suelo. Un solo paso puede destruir un huevo.</p>
+                    <p class="i18n en">Many birds such as the Galápagos albatross nest directly on the ground. A single step can destroy an egg.</p>
+                  </div>
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Plantas endémicas</div>
+                    <div class="consequence-stat-label i18n en">Endemic plants</div>
+                    <p class="i18n es">La vegetación de lava tarda décadas en recuperarse. Algunas especies arbustivas solo crecen en Galápagos.</p>
+                    <p class="i18n en">Lava vegetation takes decades to recover. Some shrub species grow only in Galápagos.</p>
+                  </div>
+                </div>
+                <div class="consequence-fine">
+                  <div class="consequence-fine-icon">⚖️</div>
+                  <div class="consequence-fine-text">
+                    <strong class="i18n es">Sanción legal</strong>
+                    <strong class="i18n en">Legal penalty</strong>
+                    <p class="i18n es">Infracción a las reglas del Parque Nacional. El daño a ecosistemas protegidos puede derivar en multas, expulsión y acciones penales. El guía que lo permita puede perder su licencia.</p>
+                    <p class="i18n en">Violation of National Park rules. Damage to protected ecosystems can result in fines, expulsion and criminal proceedings. A guide who allows it can lose their licence.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Introducir especies -->
+          <div class="consequence-card" data-cons="especies">
+            <div class="consequence-header" onclick="toggleCons(this)">
+              <div class="consequence-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M12 22V12"/><path d="M5 12C5 6.5 8.5 2 12 2s7 4.5 7 10"/><path d="M8.7 9.3A5 5 0 0 1 12 7"/></svg>
+              </div>
+              <div class="consequence-title-block">
+                <strong class="i18n es">Introducir semillas, frutas o animales</strong>
+                <strong class="i18n en">Bringing in seeds, fruit or animals</strong>
+                <span class="i18n es">Las especies invasoras son la mayor amenaza para Galápagos</span>
+                <span class="i18n en">Invasive species are the greatest threat to Galápagos</span>
+              </div>
+              <div class="consequence-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="consequence-body">
+              <div class="consequence-inner">
+                <div class="consequence-stat-row">
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Caso real: mora</div>
+                    <div class="consequence-stat-label i18n en">Real case: blackberry</div>
+                    <p class="i18n es">La mora introducida cubre ya más de 30,000 ha en el archipiélago, desplazando plantas nativas y costando millones en control.</p>
+                    <p class="i18n en">Introduced blackberry already covers more than 30,000 ha across the archipelago, displacing native plants and costing millions to control.</p>
+                  </div>
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Fauna en riesgo</div>
+                    <div class="consequence-stat-label i18n en">Wildlife at risk</div>
+                    <p class="i18n es">Las ratas y gatos introducidos han eliminado colonias enteras de aves marinas en islas sin depredadores naturales.</p>
+                    <p class="i18n en">Introduced rats and cats have wiped out entire seabird colonies on islands without natural predators.</p>
+                  </div>
+                </div>
+                <div class="consequence-fine">
+                  <div class="consequence-fine-icon">⚖️</div>
+                  <div class="consequence-fine-text">
+                    <strong class="i18n es">Sanción legal</strong>
+                    <strong class="i18n en">Legal penalty</strong>
+                    <p class="i18n es">Infracción grave. La Ley de Régimen Especial de Galápagos establece multas de 10 a 1,000 salarios mínimos por daño ambiental, más el decomiso del material. AGROCALIDAD controla el ingreso de productos biológicos.</p>
+                    <p class="i18n en">Serious offence. The Galápagos Special Regime Law sets fines from 10 to 1,000 minimum wages for environmental damage, plus confiscation. AGROCALIDAD controls the entry of biological materials.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Flash / drones -->
+          <div class="consequence-card" data-cons="drone">
+            <div class="consequence-header" onclick="toggleCons(this)">
+              <div class="consequence-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </div>
+              <div class="consequence-title-block">
+                <strong class="i18n es">Usar flash o drones sin autorización</strong>
+                <strong class="i18n en">Using flash or drones without authorisation</strong>
+                <span class="i18n es">Pánico en colonias, accidentes de vuelo y contaminación acústica</span>
+                <span class="i18n en">Colony panic, flight accidents and noise pollution</span>
+              </div>
+              <div class="consequence-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="consequence-body">
+              <div class="consequence-inner">
+                <div class="consequence-stat-row">
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Flash fotográfico</div>
+                    <div class="consequence-stat-label i18n en">Camera flash</div>
+                    <p class="i18n es">Provoca respuestas de huida en iguanas y lobos marinos, con riesgo de lesiones por estampidas. Afecta la visión nocturna de las aves.</p>
+                    <p class="i18n en">Triggers flight responses in iguanas and sea lions, risking injuries from stampedes. Affects night vision in birds.</p>
+                  </div>
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Drones</div>
+                    <div class="consequence-stat-label i18n en">Drones</div>
+                    <p class="i18n es">El ruido y la sombra de drones desencadena abandonos masivos de colonias de fragatas y piqueros durante la época de anidación.</p>
+                    <p class="i18n en">Drone noise and shadow triggers mass abandonment of frigatebird and booby colonies during nesting season.</p>
+                  </div>
+                </div>
+                <div class="consequence-fine">
+                  <div class="consequence-fine-icon">⚖️</div>
+                  <div class="consequence-fine-text">
+                    <strong class="i18n es">Sanción legal</strong>
+                    <strong class="i18n en">Legal penalty</strong>
+                    <p class="i18n es">El Parque Nacional puede confiscar el equipo de inmediato. Operar drones sin permiso es una infracción ambiental que puede derivar en multas y expulsión de la provincia.</p>
+                    <p class="i18n en">The National Park may confiscate equipment on the spot. Operating drones without authorisation is an environmental violation that can lead to fines and expulsion from the province.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. No respetar el océano -->
+          <div class="consequence-card" data-cons="oceano">
+            <div class="consequence-header" onclick="toggleCons(this)">
+              <div class="consequence-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M2 12h20M12 2v20M2 7h3m14 0h3M2 17h3m14 0h3"/></svg>
+              </div>
+              <div class="consequence-title-block">
+                <strong class="i18n es">Contaminar playas y el océano</strong>
+                <strong class="i18n en">Polluting beaches and the ocean</strong>
+                <span class="i18n es">Daño irreversible a arrecifes de coral y zonas de crianza</span>
+                <span class="i18n en">Irreversible damage to coral reefs and breeding grounds</span>
+              </div>
+              <div class="consequence-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="consequence-body">
+              <div class="consequence-inner">
+                <div class="consequence-stat-row">
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Arrecifes de coral</div>
+                    <div class="consequence-stat-label i18n en">Coral reefs</div>
+                    <p class="i18n es">El protector solar común daña y mata el coral. La ciencia confirma que sus componentes causan blanqueamiento y deformidades en el coral incluso en concentraciones bajas. Usa solo protector mineral antes de entrar al agua.</p>
+                    <p class="i18n en">Regular sunscreen damages and kills coral. Science confirms its components cause bleaching and deformities in coral even at low concentrations. Use only mineral sunscreen before entering the water.</p>
+                  </div>
+                  <div class="consequence-stat">
+                    <div class="consequence-stat-label i18n es">Zonas de anidación</div>
+                    <div class="consequence-stat-label i18n en">Nesting zones</div>
+                    <p class="i18n es">Las tortugas marinas necesitan playas libres de luz artificial y perturbaciones para desovar. La interferencia humana reduce la tasa de eclosión.</p>
+                    <p class="i18n en">Sea turtles need beaches free of artificial light and disturbances for nesting. Human interference reduces hatch rates.</p>
+                  </div>
+                </div>
+                <div class="consequence-fine">
+                  <div class="consequence-fine-icon">⚖️</div>
+                  <div class="consequence-fine-text">
+                    <strong class="i18n es">Recomendación y sanción</strong>
+                    <strong class="i18n en">Recommendation and penalty</strong>
+                    <p class="i18n es">Usa solo protector solar mineral (de venta en farmacias locales). Verter sustancias contaminantes en la Reserva Marina de Galápagos es un delito ambiental con multas y posibles sanciones penales bajo la Ley de Régimen Especial.</p>
+                    <p class="i18n en">Use only mineral sunscreen (available at local pharmacies). Discharging pollutants into the Galápagos Marine Reserve is an environmental offence with fines and possible criminal penalties under the Special Regime Law.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /consequences-grid -->
       </section>
 
       <!-- ─────────── LUGARES ─────────── -->
@@ -809,8 +1217,8 @@
                 <div class="place-info-chip">
                   <div class="place-info-label i18n es">Nivel</div>
                   <div class="place-info-label i18n en">Difficulty</div>
-                  <p class="i18n es">Moderado — sendero con pendiente</p>
-                  <p class="i18n en">Moderate — sloped trail</p>
+                  <p class="i18n es">Moderado — sendero con pendiente y algunas partes con terreno irregular.</p>
+                  <p class="i18n en">Moderate — sloped trail with some uneven sections.</p>
                 </div>
               </div>
             </div>
@@ -962,32 +1370,32 @@
                 <span class="i18n es">Llamar</span><span class="i18n en">Call</span>
               </div>
             </a>
-            <a class="ecard clickable" href="tel:101" style="text-decoration:none">
+            <a class="ecard clickable" href="tel:911" style="text-decoration:none">
               <div class="ecard-label">Policía</div>
-              <div class="ecard-number">101</div>
-              <div class="ecard-note i18n es">Policía Nacional</div>
-              <div class="ecard-note i18n en">National Police</div>
+              <div class="ecard-number">911</div>
+              <div class="ecard-note i18n es">Atención por ECU 911</div>
+              <div class="ecard-note i18n en">Handled through ECU 911</div>
               <div class="ecard-call-hint">
                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" fill="currentColor"/></svg>
                 <span class="i18n es">Llamar</span><span class="i18n en">Call</span>
               </div>
             </a>
-            <a class="ecard clickable" href="tel:+593052521202" style="text-decoration:none">
+            <a class="ecard clickable" href="tel:053706270" style="text-decoration:none">
               <div class="ecard-label i18n es">Parque Nacional</div>
               <div class="ecard-label i18n en">National Park</div>
-              <div class="ecard-number" style="font-size:1.05rem;padding-top:5px;line-height:1.3">PNG<br>San<br>Cristóbal</div>
-              <div class="ecard-note i18n es">Oficina local · (05) 252-1202</div>
-              <div class="ecard-note i18n en">Local office · (05) 252-1202</div>
+              <div class="ecard-number" style="font-size:1.35rem;padding-top:6px;line-height:1.2">05<br>370<br>6270</div>
+              <div class="ecard-note i18n es">Parque Nacional Galápagos</div>
+              <div class="ecard-note i18n en">Galápagos National Park</div>
               <div class="ecard-call-hint">
                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" fill="currentColor"/></svg>
                 <span class="i18n es">Llamar</span><span class="i18n en">Call</span>
               </div>
             </a>
-            <a class="ecard clickable" href="tel:+593052520118" style="text-decoration:none">
+            <a class="ecard clickable" href="tel:911" style="text-decoration:none">
               <div class="ecard-label">Hospital</div>
-              <div class="ecard-number" style="font-size:1rem;padding-top:5px;line-height:1.3">Oskar<br>Jandl</div>
-              <div class="ecard-note i18n es">Pto. Baquerizo Moreno</div>
-              <div class="ecard-note i18n en">Pto. Baquerizo Moreno</div>
+              <div class="ecard-number">911</div>
+              <div class="ecard-note i18n es">Ambulancia / atención médica</div>
+              <div class="ecard-note i18n en">Ambulance / medical care</div>
               <div class="ecard-call-hint">
                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" fill="currentColor"/></svg>
                 <span class="i18n es">Llamar</span><span class="i18n en">Call</span>
@@ -997,8 +1405,8 @@
 
           <div class="emergency-note">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span class="i18n es">Verifica siempre los números actualizados con tu guía turístico o en tu hotel antes de salir a excursiones. Los números pueden cambiar.</span>
-            <span class="i18n en">Always verify current numbers with your tour guide or hotel before heading out. Numbers may change.</span>
+            <span class="i18n es">Para policía, ambulancia o bomberos llama al 911. Para consultas del Parque Nacional Galápagos usa 05 370 6270.</span>
+            <span class="i18n en">For police, ambulance or firefighters call 911. For Galápagos National Park inquiries use 05 370 6270.</span>
           </div>
         </div>
       </section>
@@ -1145,9 +1553,10 @@
   // ═══ QUICK NAV ACTIVE STATE ═══
   function updateNavActive() {
     var sections = [
-      { id: 'normas',      el: document.getElementById('normas') },
-      { id: 'lugares',     el: document.getElementById('lugares') },
-      { id: 'emergencias', el: document.getElementById('emergencias') }
+      { id: 'normas',         el: document.getElementById('normas') },
+      { id: 'consecuencias',  el: document.getElementById('consecuencias') },
+      { id: 'lugares',        el: document.getElementById('lugares') },
+      { id: 'emergencias',    el: document.getElementById('emergencias') }
     ];
     var scrollY = window.scrollY + 140;
     var current = 'normas';
@@ -1161,17 +1570,19 @@
     });
   }
   window.addEventListener('scroll', updateNavActive, {passive:true});
-
   // ═══ LANGUAGE ═══
   function setLanguage(lang) {
-    lang = (lang==='en') ? 'en' : 'es';
+    lang = (lang === 'en') ? 'en' : 'es';
     document.documentElement.lang = lang;
-    document.body.classList.remove('lang-es','lang-en','ready');
-    document.body.classList.add('lang-'+lang,'ready');
     try { localStorage.setItem('scLang', lang); } catch(e){}
+
     var shareBtn = document.getElementById('btn-share');
-    if (shareBtn) shareBtn.setAttribute('aria-label', lang==='en' ? 'Share' : 'Compartir');
+    if (shareBtn) shareBtn.setAttribute('aria-label', lang === 'en' ? 'Share' : 'Compartir');
+
+    document.body.classList.remove('lang-es', 'lang-en', 'ready');
+    document.body.classList.add('lang-' + lang, 'ready');
   }
+
   document.querySelectorAll('[data-set-lang]').forEach(function(btn) {
     btn.addEventListener('click', function() {
       setLanguage(btn.getAttribute('data-set-lang'));
@@ -1184,9 +1595,7 @@
     renderRules();
     var saved; try { saved = localStorage.getItem('scLang'); } catch(e){}
     if (saved==='es'||saved==='en') { setLanguage(saved); return; }
-    // Si no hay preferencia guardada, mostrar el language gate sin aplicar ningún idioma
-    // (la gate permanece visible hasta que el usuario elija)
-    // Pero aseguramos que los elementos de la gate sean visibles igualmente
+    // No saved preference — show the language gate
   });
 
   // ═══ READING PROGRESS ═══
@@ -1279,6 +1688,20 @@
     draw();
     showToast(document.body.classList.contains('lang-en') ? '🎉 You completed all 12 rules!' : '🎉 ¡Completaste las 12 normas!');
   }
+  // ═══ CONSEQUENCES ACCORDION ═══
+  function toggleCons(header) {
+    var card = header.closest('.consequence-card');
+    var isOpen = card.classList.contains('open');
+    // Close all others
+    document.querySelectorAll('.consequence-card.open').forEach(function(c) {
+      c.classList.remove('open');
+    });
+    if (!isOpen) {
+      card.classList.add('open');
+    }
+    if (navigator.vibrate) navigator.vibrate(8);
+  }
+
   </script>
 </body>
 </html>
