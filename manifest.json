@@ -2,7 +2,8 @@
   "name": "San Cristóbal Responsable",
   "short_name": "San Cristóbal",
   "description": "Guía ambiental y normas para visitar San Cristóbal, Galápagos.",
-  "start_url": "./san-cristobal-responsable-corregido.html",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f0f9f8",
   "theme_color": "#1e4a5a",
@@ -22,6 +23,9 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["travel", "education"],
+  "categories": [
+    "travel",
+    "education"
+  ],
   "screenshots": []
 }
